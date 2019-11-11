@@ -1,0 +1,33 @@
+
+#buttons{
+  height:100px;background:#2c3e50;
+}
+
+#buttons > p {
+  width:50%;
+  float:left;
+  color:white;
+  text-align:center;
+  padding-top:25px;
+  height:75%;
+  margin:0;
+}
+
+#signupButton, #loginButton:hover{
+  color:#2c3e50;
+  cursor:pointer;
+}
+
+#signupLoginDiv{
+  width: 100%;
+  height: 100%;
+  font-family: 'Roboto', sans-serif;
+}
+
+#signupLoginModal{
+  width: 80%;
+  height: 80%;
+
+}
+
+.yellow{background-color:gold;}

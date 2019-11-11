@@ -1,0 +1,28 @@
+.welcomePage{
+    height: 100vh;
+    border: 3px solid #eeeeee;
+
+}
+
+.title{
+    margin-top: 10em;
+}
+
+.welcomeMsg{
+    margin-top: 30em;
+    font-family: 'Helvetica Neue', 'Helevetica', sans-serif;
+}
+
+.fadeOut{
+    opacity:0;
+    width:0;
+    height:0;
+    transition: width 3s 3s, height 3s 3s, opacity 0.3s;
+
+}
+.fadeIn{
+    visibility: visible;
+    background-color: beige;
+    transition: 3s ease-out;
+
+}

@@ -1,0 +1,28 @@
+
+
+#signup{
+    padding-top: 5%;
+    width:100%;background:#2c3e50;
+    height: calc(0.5*100vh);
+    padding-top: 10%;
+}
+#username,#last,#confirm, #email, #password, #roleSelect{
+    width:50%;
+    margin-left: 25%;
+}
+
+#dob{
+    width:100%;
+    height: 2.5em;
+    border-radius: 5px;
+}
+
+#dobContainer{
+    margin-left: 25%;
+}
+
+#signupBtn{
+    width:30%;
+    margin-top: 5%;
+    margin-left: 35%;
+}
