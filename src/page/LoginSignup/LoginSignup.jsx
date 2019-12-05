@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
-import Login from '../../component/Login/Login';
-import Signup from '../../component/Signup/Signup';
+import Login from '../../Component/Login/Login';
+import Signup from '../../Component/Signup/Signup';
 import './LoginSignup.css'
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';

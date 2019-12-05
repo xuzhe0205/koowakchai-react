@@ -3,7 +3,7 @@
 #signup{
     padding-top: 5%;
     width:100%;background:#2c3e50;
-    height: calc(0.5*100vh);
+    height: calc(0.55*100vh);
     padding-top: 10%;
 }
 #username,#last,#confirm, #email, #password, #roleSelect{
@@ -25,4 +25,10 @@
     width:30%;
     margin-top: 5%;
     margin-left: 35%;
+}
+
+#genderContainer{
+    width:50%;
+    color: whitesmoke;
+    margin-left: 25%;
 }

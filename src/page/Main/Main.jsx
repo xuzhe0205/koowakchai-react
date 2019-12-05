@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Welcome} from '../../component/Welcome/Welcome';
+import {Welcome} from '../../Component/Welcome/Welcome';
 import Navbar from 'react-bootstrap/Navbar';
 import Button from 'react-bootstrap/Button';
 import Nav from 'react-bootstrap/Nav';
@@ -8,6 +8,8 @@ import Form from 'react-bootstrap/Form';
 import FormControl from 'react-bootstrap/FormControl';
 import './Main.css';
 import LoginSignup from '../LoginSignup/LoginSignup';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 class Main extends Component{
 
@@ -24,6 +26,7 @@ class Main extends Component{
             <div>
                 <Welcome startup = {this.state.startup} />
                 <Navbar bg="light" expand="lg">
+
                     <Navbar.Brand href="#home">Koowakchai</Navbar.Brand>
                     <Navbar.Toggle aria-controls="basic-navbar-nav" />
                     <Navbar.Collapse id="basic-navbar-nav">
