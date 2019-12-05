@@ -12,3 +12,9 @@
     -webkit-flex-flow: row wrap;
     justify-content: space-around;
 }
+
+#signupLoginModal{
+    width: 80%;
+    height: 80%;
+
+}

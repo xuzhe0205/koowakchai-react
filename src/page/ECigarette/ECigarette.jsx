@@ -6,16 +6,33 @@ import user from "../../Model/user";
 import Card from "react-bootstrap/Card";
 import historyUrl from "../../History/history";
 import Badge from "react-bootstrap/Badge";
+import Modal from 'react-bootstrap/Modal';
+import Signup from "../../Component/Signup/Signup";
+import Login from "../../Component/Login/Login";
+import selectedProduct from "../../Model/selectedProduct";
 
 
 class ECigarette extends Component{
     constructor(props){
         super(props);
         this.state = {
-            eCigarette: []
+            eCigarette: [],
+            open: false,
+            selectedProduct: {}
         };
+        // this.openModal = this.openModal.bind(this);
+        this.closeModal = this.closeModal.bind(this);
         this.phoneNumber = React.createRef();
         this.profileUrl = React.createRef();
+    }
+
+    openModal(product){
+        console.log(product);
+        this.setState({ open: true, selectedProduct: product });
+    }
+
+    closeModal(){
+        this.setState({ open: false })
     }
 
     componentWillMount(){
@@ -40,9 +57,21 @@ class ECigarette extends Component{
         return str.charAt(0).toUpperCase() + str.slice(1);
     }
 
-    test(){
-        alert("???")
+    mutateSelectedProduct(product){
+        this.setState({
+            selectedProduct: product
+        });
+        this.openModal.bind(this);
+        alert("!!!")
     }
+
+
+    // test(product){
+    //     alert("???");
+    //     this.mutateSelectedProduct.bind(this, product);
+    //     console.log("selected product: " + this.state.selectedProduct);
+    //     this.openModal;
+    // }
 
     createECigaretteCards(){
         let cards = [];
@@ -50,7 +79,7 @@ class ECigarette extends Component{
             cards.push(
                 <div key={index} style={{marginTop: '3rem'}}>
                     <Card style={{ width: '20rem', alignItems: 'center' }} key={index}>
-                        <Card.Img variant="top" src={value["productUrl"]} onClick={this.test.bind(this)} style={{width:'15rem', height:'12rem', marginLeft: '3rem', marginTop: '1rem'}}/>
+                        <Card.Img variant="top" src={value["productUrl"]} onClick={this.openModal.bind(this,value)} style={{width:'15rem', height:'12rem', marginLeft: '3rem', marginTop: '1rem'}}/>
                         <Card.Body>
                             <Card.Title>{value['name']}</Card.Title>
                             <Card.Subtitle className="mb-2 text-muted">$ {value['price']}</Card.Subtitle>
@@ -64,6 +93,7 @@ class ECigarette extends Component{
 
                         </Card.Body>
                     </Card>
+
                 </div>
             )
         }
@@ -78,6 +108,32 @@ class ECigarette extends Component{
                 <div className="flex-container">
                     {this.createECigaretteCards()}
                 </div>
+                <Modal
+                    show={this.state.open}
+                    onHide={this.closeModal}
+                    aria-labelledby="ModalHeader"
+                    id="signupLoginModal"
+                >
+                    <Modal.Header closeButton>
+                        <Modal.Title id="contained-modal-title-vcenter">
+                            {this.state.selectedProduct['name']}
+                        </Modal.Title>
+                    </Modal.Header>
+
+                    {/*<div style={largeshit}>shit!</div>*/}
+                    {/*<Modal.Header closeButton>*/}
+                    {/*    <Modal.Title>Modal heading</Modal.Title>*/}
+                    {/*</Modal.Header>*/}
+                    {/*<Modal.Body>Woohoo, you're reading this text in a modal!</Modal.Body>*/}
+                    {/*<Modal.Footer>*/}
+                    {/*    <Button variant="secondary" onClick={handleClose}>*/}
+                    {/*        Close*/}
+                    {/*    </Button>*/}
+                    {/*    <Button variant="primary" onClick={handleClose}>*/}
+                    {/*        Save Changes*/}
+                    {/*    </Button>*/}
+                    {/*</Modal.Footer>*/}
+                </Modal>
             </div>
         );
     }
