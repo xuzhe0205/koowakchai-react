@@ -37,7 +37,9 @@ class Login extends Component{
         const res = axios.post('http://localhost:8080/koowakchai/user/login?username=' + userInfo.username + '&password=' + userInfo.password + '&roleName='+ userInfo.roleName, config).then(res => {
             console.log(res);
             console.log('response data: ' + res.data);
-            user.authorization = res.data.data;
+            user.authorization = res.data.data[0];
+            user.email = res.data.data[1]["email"];
+            user.userUrl = res.data.data[1]["userUrl"];
             this.setState({ redirect: true });
         })
 

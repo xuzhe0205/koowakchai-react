@@ -4,7 +4,6 @@ import FormControl from "react-bootstrap/FormControl";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import DatePicker from "react-datepicker";
-import Toast from "react-bootstrap/Toast";
 import "react-datepicker/dist/react-datepicker.css";
 import axios from 'axios';
 import user from '../../Model/user.js';
@@ -45,7 +44,7 @@ class Signup extends Component{
         })
     }
 
-    notify(){toast("Congrats! You have successfully registered :)")};
+    notify(){toast.success("Congrats! You have successfully registered ✌️")};
 
     doSignup(event) {
 
@@ -85,7 +84,7 @@ class Signup extends Component{
 
         return (
             <div>
-                <ToastContainer draggable={false} position={toast.POSITION.TOP_CENTER}/>
+                <ToastContainer draggable={false} position={toast.POSITION.TOP_CENTER} style={{fontSize: '20px'}}/>
                 <Form id="signup">
                     <Form.Group controlId="formBasicUsername" id="roleSelect">
                         <Form.Control as="select" ref={this.roleName}>

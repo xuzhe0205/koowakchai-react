@@ -75,7 +75,7 @@ class Home extends Component{
         ]
         for (const [index, value] of this.state.businessTypes.entries()) {
             cards.push(
-                <div key={index} style={{marginTop: '2rem'}}>
+                <div key={index} style={{marginTop: '2rem', height: '20rem' }}>
                     <Card style={{ width: '18rem' }} key={index}>
                         <Card.Img variant="top" src={businessTypes[index].image} style={{width:'8rem', height:'8rem', marginLeft: '5rem', marginTop: '1rem'}}/>
                         <Card.Body>

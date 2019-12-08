@@ -4,6 +4,7 @@ import Signup from '../../Component/Signup/Signup';
 import './LoginSignup.css'
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
+import Nav from "react-bootstrap/Nav";
 
 
 class LoginSignup extends Component{
@@ -50,8 +51,8 @@ class LoginSignup extends Component{
         let self = this;
         return(
             <div>
-                <Button variant="light" onClick={this.openModal}>
-                    Login/Signup
+                <Button variant="light" onClick={this.openModal}  style={{width: '10rem', height: '3rem', marginBottom: '0.8rem'}}>
+                    <strong>Login/Signup</strong>
                 </Button>
                 <Modal
                     show={this.state.open}

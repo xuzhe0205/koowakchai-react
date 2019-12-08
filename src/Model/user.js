@@ -2,7 +2,7 @@ const user = {
     username: '',
     password: '',
     dob: '',
-    phoneNum: '',
+    phoneNum: 'Enter your phone number',
     email: '',
     gender: '',
     userUrl:'',

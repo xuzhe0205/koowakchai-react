@@ -6,6 +6,7 @@ import Home from '../Page/Home/Home';
 import EditUserInfo from '../Page/EditUserInfo/EditUserInfo';
 import Store from '../Page/Store/Store';
 import ECigarette from '../Page/ECigarette/ECigarette';
+import ShoppingCart from '../Page/ShoppingCart/ShoppingCart';
 
 const BaseRoute = () => (
     <HashRouter>
@@ -16,6 +17,7 @@ const BaseRoute = () => (
             <Route exact path="/editUserInfo" component={EditUserInfo}/>
             <Route exact path="/store" component={Store}/>
             <Route exact path="/eCigarette" component={ECigarette}/>
+            <Route exact path="/shoppingCart" component={ShoppingCart}/>
         </Switch>
     </HashRouter>
 )

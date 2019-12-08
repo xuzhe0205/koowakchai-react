@@ -9,3 +9,34 @@
 #fileUpload{
     margin-bottom: 10%;
 }
+
+.panel-title {display: inline;font-weight: bold;}
+.checkbox.pull-right { margin: 0; }
+.pl-ziro { padding-left: 0px; }
+
+.flex-container {
+    padding: 0;
+    margin-top: 0;
+    list-style: none;
+
+    display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+
+    -webkit-flex-flow: row wrap;
+    justify-content: space-around;
+}
+
+#cvvText{
+    display: none
+}
+
+#cvvLabel :hover #cvvText{
+    display: inline-block;
+}
+
+#cvvQuestion :hover #cvvText{
+    display: inline-block;
+}
