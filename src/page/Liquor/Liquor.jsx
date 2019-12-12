@@ -1,10 +1,13 @@
 import React, {Component} from 'react';
-import './ECigarette.css';
+import './Liquor.css';
 import Header from '../../Component/Header/Header';
 import axios from "axios";
 import user from "../../Model/user";
 import Card from "react-bootstrap/Card";
 import historyUrl from "../../History/history";
+import Form from "react-bootstrap/Form";
+import FormControl from "react-bootstrap/FormControl";
+import Button from "react-bootstrap/Button";
 import Badge from "react-bootstrap/Badge";
 import Modal from 'react-bootstrap/Modal';
 import ListGroup from 'react-bootstrap/ListGroup';
@@ -12,16 +15,13 @@ import Image from "react-bootstrap/Image";
 import CartFAB from "../../Component/CartFAB/CartFAB";
 import { ToastContainer, toast } from 'react-toastify';
 import InfiniteScroll from 'react-infinite-scroll-component';
-import Form from "react-bootstrap/Form";
-import FormControl from "react-bootstrap/FormControl";
-import Button from "react-bootstrap/Button";
 
 
-class ECigarette extends Component{
+class Liquor extends Component{
     constructor(props){
         super(props);
         this.state = {
-            eCigarette: [],
+            liquor: [],
             open: false,
             selectedProduct: {},
             itemQuantity: 1,
@@ -50,17 +50,17 @@ class ECigarette extends Component{
                     'Authorization': user.authorization
                 },
                 params: {
-                    productType: "ecigarette",
+                    productType: "liquor",
                     pageNumber: this.state.pageNumber,
                     pageSize: 6
                 },
             }
         ).then(res => {
             this.setState({
-                eCigarette: res.data.data,
+                liquor: res.data.data,
                 pageNumber: this.state.pageNumber + 1
             });
-            console.log(this.state.eCigarette);
+            console.log(this.state.liquor);
         })
     }
 
@@ -68,33 +68,9 @@ class ECigarette extends Component{
         return str.charAt(0).toUpperCase() + str.slice(1);
     }
 
-    loadMore(){
-        const res = axios.get("http://localhost:8080/koowakchai/store/getSortedProductsByType",
-            {
-                headers: {
-                    'Authorization': user.authorization
-                },
-                params: {
-                    productType: "ecigarette",
-                    pageNumber: this.state.pageNumber,
-                    pageSize: 6
-                },
-            }
-        ).then(res => {
-            setTimeout(() => {
-                this.setState({
-                    eCigarette: this.state.eCigarette.concat(Array.from(res.data.data)),
-                    pageNumber: this.state.pageNumber + 1
-                });
-                console.log(this.state.eCigarette);
-                this.createECigaretteCards();
-            }, 1500);
-        })
-    }
-
-    createECigaretteCards(){
+    createLiquorCards(){
         let cards = [];
-        for (const [index, value] of this.state.eCigarette.entries()) {
+        for (const [index, value] of this.state.liquor.entries()) {
             cards.push(
                 <div key={index} style={{marginBottom: '3rem'}}>
                     <Card style={{ width: '20rem', alignItems: 'center' }} key={index}>
@@ -104,12 +80,10 @@ class ECigarette extends Component{
                             <Card.Subtitle className="mb-2 text-muted">${value['price']}</Card.Subtitle>
                             <Card.Text>
                                 <br/>
-                                <Badge variant="dark">Brand</Badge> {value['brand']}<br/>
-                                <Badge variant="secondary">Category</Badge> {this.Capitalize(value['category'])}
+                                <Badge variant="dark">Category</Badge> {this.Capitalize(value['category'])}<br/>
+                                <Badge variant="secondary">Alcohol Volume</Badge> {value['alcVol']}<br/>
+                                <Badge variant="secondary">Size</Badge> {value['size']}
                             </Card.Text>
-                            {/*<Button variant="outline-success">*/}
-                            {/*    <Image src="https://static.thenounproject.com/png/689826-200.png" rounded style={{width: '2rem', height: '2rem', cursor: 'pointer'}}/>*/}
-                            {/*</Button>*/}
 
                         </Card.Body>
                     </Card>
@@ -165,6 +139,31 @@ class ECigarette extends Component{
         })
     }
 
+
+    loadMore(){
+        const res = axios.get("http://localhost:8080/koowakchai/store/getSortedProductsByType",
+            {
+                headers: {
+                    'Authorization': user.authorization
+                },
+                params: {
+                    productType: "liquor",
+                    pageNumber: this.state.pageNumber,
+                    pageSize: 6
+                },
+            }
+        ).then(res => {
+            setTimeout(() => {
+                this.setState({
+                    liquor: this.state.liquor.concat(Array.from(res.data.data)),
+                    pageNumber: this.state.pageNumber + 1
+                });
+                console.log(this.state.liquor);
+                this.createLiquorCards();
+            }, 1500);
+        })
+    }
+
     doSearchProducts(){
         const res = axios.get("http://localhost:8080/koowakchai/store/searchProducts",
             {
@@ -173,40 +172,41 @@ class ECigarette extends Component{
                 },
                 params: {
                     authorization: user.authorization,
-                    productType: "ecigarette",
+                    productType: "liquor",
                     keyword: this.keyword.current.value
                 },
             }
         ).then(res => {
             this.setState({
-                eCigarette: res.data.data,
+                liquor: res.data.data,
                 hasMore: false
             });
         })
     }
 
+
     render(){
         return(
             <div>
-                <Header authorization={user.authorization} backBtn="visible" userBtn="visible" currentPath="/eCigarette"/>
+                <Header authorization={user.authorization} backBtn="visible" userBtn="visible" currentPath="/liquor"/>
                 <div className="flex-container">
                     <Form inline>
-                        <FormControl type="text" style={{width: '20rem'}} placeholder="Search by name, brand or flavour" className="mr-sm-2" ref={this.keyword}/>
+                        <FormControl type="text" style={{width: '20rem'}} placeholder="Search by name, made country or category" className="mr-sm-2" ref={this.keyword}/>
                         <Button variant="outline-success" onClick={this.doSearchProducts.bind(this)} >Search</Button>
                     </Form>
                 </div>
+
                 <ToastContainer  position={toast.POSITION.TOP_CENTER} autoClose={3000} style={{fontSize: '20px'}}/>
                 <InfiniteScroll
-                    dataLength={this.state.eCigarette.length}
+                    dataLength={this.state.liquor.length}
                     next={this.loadMore.bind(this)}
                     hasMore={this.state.hasMore}
                     loader={<h4>Loading...</h4>}
                 >
                     <div className="flex-container">
-                        {this.createECigaretteCards()}
+                        {this.createLiquorCards()}
                     </div>
                 </InfiniteScroll>
-
 
                 <Modal
                     show={this.state.open}
@@ -229,7 +229,10 @@ class ECigarette extends Component{
                                 <Badge pill variant="info">Brand</Badge> {this.state.selectedProduct['brand']}
                             </ListGroup.Item>
                             <ListGroup.Item>
-                                <Badge pill variant="info">Flavour</Badge> {this.state.selectedProduct['flavour']}
+                                <Badge pill variant="info">Alcohol Volume</Badge> {this.state.selectedProduct['alcVol']}
+                            </ListGroup.Item>
+                            <ListGroup.Item>
+                                <Badge pill variant="info">Size</Badge> {this.state.selectedProduct['size']}
                             </ListGroup.Item>
                             <ListGroup.Item>
                                 <Badge pill variant="info">Category</Badge> {this.state.selectedProduct['category']}
@@ -259,10 +262,10 @@ class ECigarette extends Component{
                     <br/>
                     <br/>
                 </Modal>
-                <CartFAB itemQuantity = {this.state.itemQuantity} key={this.state.requirementKey} productPageUrl="/eCigarette"/>
+                <CartFAB itemQuantity = {this.state.itemQuantity} key={this.state.requirementKey} productPageUrl="/liquor"/>
             </div>
         );
     }
 }
 
-export default ECigarette;
+export default Liquor;

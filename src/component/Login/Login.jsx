@@ -5,7 +5,6 @@ import FormControl from "react-bootstrap/FormControl";
 import DatePicker from "react-datepicker";
 import Button from "react-bootstrap/Button";
 import axios from "axios";
-import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import user from '../../Model/user.js';
 import history from '../../History/history';
@@ -16,7 +15,8 @@ class Login extends Component{
     constructor(props){
         super(props);
         this.state = {
-            redirect: false
+            redirect: false,
+            url: ''
         };
         this.username = React.createRef();
         this.password = React.createRef();
@@ -25,6 +25,7 @@ class Login extends Component{
 
     doLogin(event){
         event.preventDefault();
+        let url = '';
         const userInfo = {
             roleName: this.roleName.current.value,
             username: this.username.current.value,
@@ -40,17 +41,22 @@ class Login extends Component{
             user.authorization = res.data.data[0];
             user.email = res.data.data[1]["email"];
             user.userUrl = res.data.data[1]["userUrl"];
-            this.setState({ redirect: true });
+            if (userInfo.roleName == "Customer"){
+                url = '/home';
+            }
+            else if (userInfo.roleName == "Store Staff"){
+                url = '/staffHome';
+            }
+            this.setState({ redirect: true, url: url });
         })
 
     }
 
 
     render(){
-        const { redirect } = this.state;
-
+        let redirect = this.state.redirect;
         if (redirect) {
-            return <Redirect to='/home'/>;
+            return <Redirect to={this.state.url}/>;
         }
 
         return (

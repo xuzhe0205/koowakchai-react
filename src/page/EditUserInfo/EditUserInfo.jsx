@@ -25,16 +25,8 @@ class EditUserInfo extends Component{
             selectedFile: null,
             showNewPayment: 'none',
             showWallet: 'block',
-            requirementKey: Math.random()
         };
-        this.phoneNumber = React.createRef();
-        this.email = React.createRef();
-        this.cardHolderName = React.createRef();
-        this.cardNumber = React.createRef();
-        this.zipcode = React.createRef();
-        this.mm = React.createRef();
-        this.yy = React.createRef();
-        this.cvv = React.createRef();
+
     }
 
     notify(){
@@ -100,40 +92,7 @@ class EditUserInfo extends Component{
 
 
 
-    addNewPayment(){
-        this.setState({
-            showNewPayment: 'block',
-            showWallet: 'none'
-        })
-    }
 
-
-    doUpdatePayment(){
-        const res = axios.post("http://localhost:8080/koowakchai/user/updatePaymentInfo", null,
-            {
-                headers: {
-                    'Authorization': user.authorization
-                },
-                params: {
-                    authorization: user.authorization,
-                    cardholderName: this.cardHolderName.current.value,
-                    cardNum: this.cardNumber.current.value,
-                    zipcode: this.zipcode.current.value,
-                    cvv: this.cvv.current.value,
-                    expDate: this.mm.current.value + this.yy.current.value
-                },
-            }
-        ).then(res => {
-            console.log("tried addToCart: " + res.data);
-            // Force a render with a simulated state change
-            this.setState({
-                requirementKey: Math.random(),
-                showNewPayment: 'none',
-                showWallet:'block'
-            });
-            this.notify();
-        })
-    }
 
     render(){
         return(
@@ -177,103 +136,13 @@ class EditUserInfo extends Component{
                         </Accordion.Toggle>
                         <Accordion.Collapse eventKey="1">
                             <Card.Body>
-                                <div style={{display: this.state.showWallet}}>
+                                <div>
                                     <div className="flex-container">
-                                        <Wallet key={this.state.requirementKey}/>
+                                        <Wallet key={this.state.requirementKey} placeOrder="none" editInfo="block"/>
                                     </div>
-                                    <Image src="https://static.thenounproject.com/png/3012947-200.png" style={{width: '2rem', height: '2rem', marginTop: '3rem'}} onClick={this.addNewPayment.bind(this)}/>
-
-
                                 </div>
 
-                                <div style={{display: this.state.showNewPayment}}>
-                                    <form role="form">
-                                        <div className="form-group">
-                                            <label htmlFor="username">Cardholder's name</label>
-                                            <div className="input-group">
-                                                <div className="input-group-prepend">
-                                                <span className="input-group-text">
-                                                    <Image src="https://static.thenounproject.com/png/1325922-200.png" style={{width: '1.5rem', height: '1.5rem'}}/>
-                                                </span>
-                                                </div>
-                                                <input type="text" className="form-control" name="username" placeholder=""
-                                                       required="" ref={this.cardHolderName}/>
-                                            </div>
-                                        </div>
 
-                                        <div className="form-group">
-                                            <label htmlFor="cardNumber">Card number</label>
-                                            <div className="input-group">
-                                                <div className="input-group-prepend">
-                                                <span className="input-group-text">
-                                                    <Image src="https://static.thenounproject.com/png/2643818-200.png" style={{width: '1.5rem', height: '1.5rem'}}/>
-                                                </span>
-                                                </div>
-                                                <input type="text" className="form-control" name="cardNumber"
-                                                       placeholder="" ref={this.cardNumber}/>
-                                            </div>
-                                        </div>
-                                        <div className="row">
-                                            <div className="col-sm-4">
-                                                <div className="form-group">
-                                                    <label data-toggle="tooltip" title=""
-                                                           data-original-title="3 digits code on back side of the card">ZipCode <i
-                                                        className="fa fa-question-circle"></i></label>
-                                                    <input className="form-control" required="" type="text" ref={this.zipcode}/>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div className="row">
-                                            <div className="col-sm-8">
-                                                <div className="form-group">
-                                                    <label><span className="hidden-xs">Expiration</span> </label>
-                                                    <div className="form-inline">
-                                                        <select className="form-control" style={{width:"45%"}} ref={this.mm}>
-                                                            <option>01</option>
-                                                            <option>02</option>
-                                                            <option>03</option>
-                                                            <option>04</option>
-                                                            <option>05</option>
-                                                            <option>06</option>
-                                                            <option>07</option>
-                                                            <option>08</option>
-                                                            <option>09</option>
-                                                            <option>10</option>
-                                                            <option>11</option>
-                                                            <option>12</option>
-
-                                                        </select>
-                                                        <span style={{width:"10%", textAlign: "center"}}> / </span>
-                                                        <select className="form-control" style={{width:"45%"}} ref={this.yy}>
-                                                            <option>19</option>
-                                                            <option>20</option>
-                                                            <option>21</option>
-                                                            <option>22</option>
-                                                            <option>23</option>
-                                                            <option>24</option>
-                                                            <option>25</option>
-
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div className="col-sm-4">
-                                                <div className="form-group">
-                                                    <label data-toggle="tooltip" title=""
-                                                           data-original-title="3 digits code on back side of the card" id="cvvLabel">
-                                                        CVV <Image id="cvvQuestion" src="https://static.thenounproject.com/png/949374-200.png" style={{width: '1rem', height: '1rem'}}/>
-                                                        <span id = "cvvText">3 digits code on back side of the card</span>
-
-                                                    </label>
-                                                    <input className="form-control" required="" type="text" ref={this.cvv}/>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <button className="subscribe btn btn-primary btn-block" type="button" onClick={this.doUpdatePayment.bind(this)}> Confirm
-                                        </button>
-                                    </form>
-
-                                </div>
 
                             </Card.Body>
                         </Accordion.Collapse>

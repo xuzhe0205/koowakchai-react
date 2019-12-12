@@ -8,7 +8,8 @@ const user = {
     userUrl:'',
     region: '',
     roleName:'',
-    authorization: ''
+    authorization: '',
+    currentPayment: {}
 };
 
 export default user;

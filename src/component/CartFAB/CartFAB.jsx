@@ -52,7 +52,7 @@ class CartFAB extends Component{
     render(){
         const redirect = this.state.redirect;
         if (redirect){
-            historyUrl.push("/eCigarette");
+            historyUrl.push(this.props.productPageUrl);
             return <Redirect to={{ pathname: 'shoppingCart', state: { authorization: user.authorization} }}/>
         }
         return (
