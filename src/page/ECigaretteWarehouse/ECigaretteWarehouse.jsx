@@ -12,6 +12,7 @@ import Image from "react-bootstrap/Image";
 import { ToastContainer, toast } from 'react-toastify';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import FormControl from "react-bootstrap/FormControl";
+import { Redirect } from 'react-router-dom';
 
 
 class ECigaretteWarehouse extends Component{
@@ -23,7 +24,9 @@ class ECigaretteWarehouse extends Component{
             selectedProduct: {},
             itemQuantity: 1,
             requirementKey: Math.random(),
-            pageNumber: 1
+            pageNumber: 1,
+            redirect: false,
+            hasError: false
         };
         this.openModal = this.openModal.bind(this);
         this.closeModal = this.closeModal.bind(this);
@@ -40,6 +43,9 @@ class ECigaretteWarehouse extends Component{
     }
 
     componentWillMount(){
+        if (user.authorization.length == 0){
+            this.setState({ redirect: true, hasError: true });
+        }
         const res = axios.get("http://localhost:8080/koowakchai/store/getSortedProductsByType",
             {
                 headers: {
@@ -57,6 +63,32 @@ class ECigaretteWarehouse extends Component{
                 pageNumber: this.state.pageNumber + 1
             });
             console.log(this.state.eCigarette);
+        }).catch(error => {
+            let errStr = "";
+            // Error
+            if (error.response) {
+                // The request was made and the server responded with a status code
+                // that falls out of the range of 2xx
+                // console.log(error.response.data);
+                // console.log(error.response.status);
+                // console.log(error.response.headers);
+                errStr = "response data: " + error.response.data + "; response status: " + error.response.status + "; response headers: " + error.response.headers;
+
+
+            } else if (error.request) {
+                // The request was made but no response was received
+                // `error.request` is an instance of XMLHttpRequest in the
+                // browser and an instance of
+                // http.ClientRequest in node.js
+                console.log(error.request);
+                errStr = "error request: " + error.request;
+            } else {
+                // Something happened in setting up the request that triggered an Error
+                console.log('Error', error.message);
+                errStr = "error message: " + error.message;
+            }
+            console.log(error.config);
+            return <Redirect to={{ pathname: '/errorPage', state: { authorization: user.authorization, yourError: errStr} }}/>
         })
     }
 
@@ -85,6 +117,32 @@ class ECigaretteWarehouse extends Component{
                 console.log(this.state.eCigarette);
                 this.createECigaretteCards();
             }, 1500);
+        }).catch(error => {
+            let errStr = "";
+            // Error
+            if (error.response) {
+                // The request was made and the server responded with a status code
+                // that falls out of the range of 2xx
+                // console.log(error.response.data);
+                // console.log(error.response.status);
+                // console.log(error.response.headers);
+                errStr = "response data: " + error.response.data + "; response status: " + error.response.status + "; response headers: " + error.response.headers;
+
+
+            } else if (error.request) {
+                // The request was made but no response was received
+                // `error.request` is an instance of XMLHttpRequest in the
+                // browser and an instance of
+                // http.ClientRequest in node.js
+                console.log(error.request);
+                errStr = "error request: " + error.request;
+            } else {
+                // Something happened in setting up the request that triggered an Error
+                console.log('Error', error.message);
+                errStr = "error message: " + error.message;
+            }
+            console.log(error.config);
+            return <Redirect to={{ pathname: '/errorPage', state: { authorization: user.authorization, yourError: errStr} }}/>
         })
     }
 
@@ -152,10 +210,46 @@ class ECigaretteWarehouse extends Component{
             this.setState({ pageNumber: 1 });
             this.componentWillMount();
 
+        }).catch(error => {
+            let errStr = "";
+            // Error
+            if (error.response) {
+                // The request was made and the server responded with a status code
+                // that falls out of the range of 2xx
+                // console.log(error.response.data);
+                // console.log(error.response.status);
+                // console.log(error.response.headers);
+                errStr = "response data: " + error.response.data + "; response status: " + error.response.status + "; response headers: " + error.response.headers;
+
+
+            } else if (error.request) {
+                // The request was made but no response was received
+                // `error.request` is an instance of XMLHttpRequest in the
+                // browser and an instance of
+                // http.ClientRequest in node.js
+                console.log(error.request);
+                errStr = "error request: " + error.request;
+            } else {
+                // Something happened in setting up the request that triggered an Error
+                console.log('Error', error.message);
+                errStr = "error message: " + error.message;
+            }
+            console.log(error.config);
+            return <Redirect to={{ pathname: '/errorPage', state: { authorization: user.authorization, yourError: errStr} }}/>
         })
     }
 
     render(){
+        const redirect = this.state.redirect;
+        const hasError = this.state.hasError;
+        if (redirect) {
+            if (hasError) {
+                return <Redirect to={{
+                    pathname: '/errorPage',
+                    state: {authorization: user.authorization, yourError: "authentication"}
+                }}/>
+            }
+        }
         return(
             <div>
                 <Header authorization={user.authorization} backBtn="visible" userBtn="visible" currentPath="/eCigarette"/>

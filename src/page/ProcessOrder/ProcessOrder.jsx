@@ -27,19 +27,23 @@ class ProcessOrder extends Component{
             logisticsCompanyList: [],
             customerOrdersIds: [],
             selectedLogisticsCompany: '',
+            redirect: false,
+            hasError: false
         };
         this.logisticsCompany = React.createRef();
     }
 
     closeModal(){
         this.setState({ open: false });
-        alert('///');
         this.forceUpdate();
     }
 
     notify(){toast.success("You have successfully processed these orders 🚚️")};
 
     componentWillMount(){
+        if (user.authorization.length == 0){
+            this.setState({ redirect: true, hasError: true });
+        }
         const res = axios.get("http://localhost:8080/koowakchai/store/getOrdersByCustomers",
             {
                 headers: {
@@ -146,6 +150,16 @@ class ProcessOrder extends Component{
     }
 
     render(){
+        const redirect = this.state.redirect;
+        const hasError = this.state.hasError;
+        if (redirect) {
+            if (hasError) {
+                return <Redirect to={{
+                    pathname: '/errorPage',
+                    state: {authorization: user.authorization, yourError: "authentication"}
+                }}/>
+            }
+        }
         return(
             <div>
                 <Header authorization={user.authorization} backBtn="visible" userBtn="visible" currentPath="/processOrder"/>

@@ -13,6 +13,7 @@ import ProcessOrder from "../Page/ProcessOrder/ProcessOrder";
 import Liquor from "../Page/Liquor/Liquor";
 import ECigaretteWarehouse from "../Page/ECigaretteWarehouse/ECigaretteWarehouse";
 import LiquorWarehouse from "../Page/LiquorWarehouse/LiquorWarehouse";
+import ErrorPage from "../Page/ErrorPage/ErrorPage";
 
 const BaseRoute = () => (
     <HashRouter>
@@ -30,6 +31,7 @@ const BaseRoute = () => (
             <Route exact path="/processOrder" component={ProcessOrder}/>
             <Route exact path="/eCigaretteWarehouse" component={ECigaretteWarehouse}/>
             <Route exact path="/liquorWarehouse" component={LiquorWarehouse}/>
+            <Route exact path="/errorPage" component={ErrorPage}/>
 
         </Switch>
     </HashRouter>

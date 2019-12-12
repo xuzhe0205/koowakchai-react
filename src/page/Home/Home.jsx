@@ -18,12 +18,16 @@ class Home extends Component{
             visible: true,
             businessTypes:[],
             redirect: false,
-            url: ''
+            url: '',
+            hasError: false
         }
 
     }
 
     componentWillMount(){
+        if (user.authorization.length == 0){
+            this.setState({ redirect: true, hasError: true });
+        }
         const res = axios.get("http://localhost:8080/koowakchai/getAllBusinessTypes",
             {
                 headers: {
@@ -35,6 +39,32 @@ class Home extends Component{
                businessTypes: res.data.data
             });
             console.log(this.state.businessTypes);
+        }).catch(error => {
+            let errStr = "";
+            // Error
+            if (error.response) {
+                // The request was made and the server responded with a status code
+                // that falls out of the range of 2xx
+                // console.log(error.response.data);
+                // console.log(error.response.status);
+                // console.log(error.response.headers);
+                errStr = "response data: " + error.response.data + "; response status: " + error.response.status + "; response headers: " + error.response.headers;
+
+
+            } else if (error.request) {
+                // The request was made but no response was received
+                // `error.request` is an instance of XMLHttpRequest in the
+                // browser and an instance of
+                // http.ClientRequest in node.js
+                console.log(error.request);
+                errStr = "error request: " + error.request;
+            } else {
+                // Something happened in setting up the request that triggered an Error
+                console.log('Error', error.message);
+                errStr = "error message: " + error.message;
+            }
+            console.log(error.config);
+            return <Redirect to={{ pathname: '/errorPage', state: { authorization: user.authorization, yourError: errStr} }}/>
         })
     }
 
@@ -97,7 +127,11 @@ class Home extends Component{
 
     render(){
         const redirect = this.state.redirect;
+        const hasError = this.state.hasError;
         if (redirect) {
+            if (hasError){
+                return <Redirect to={{ pathname: '/errorPage', state: { authorization: user.authorization, yourError: "authentication"} }}/>
+            }
             historyUrl.push("/home");
             return <Redirect to={{ pathname: this.state.url, state: { authorization: user.authorization} }}/>
         }

@@ -10,13 +10,15 @@ import user from '../../Model/user.js';
 import history from '../../History/history';
 import Home from '../../Page/Home/Home';
 import { Redirect } from 'react-router-dom';
+import Alert from 'react-bootstrap/Alert';
 
 class Login extends Component{
     constructor(props){
         super(props);
         this.state = {
             redirect: false,
-            url: ''
+            url: '',
+            promptAlert: 'none'
         };
         this.username = React.createRef();
         this.password = React.createRef();
@@ -38,29 +40,42 @@ class Login extends Component{
         const res = axios.post('http://localhost:8080/koowakchai/user/login?username=' + userInfo.username + '&password=' + userInfo.password + '&roleName='+ userInfo.roleName, config).then(res => {
             console.log(res);
             console.log('response data: ' + res.data);
-            user.authorization = res.data.data[0];
-            user.email = res.data.data[1]["email"];
-            user.userUrl = res.data.data[1]["userUrl"];
-            if (userInfo.roleName == "Customer"){
-                url = '/home';
+            if (res.data.data == null){
+                this.setState({ promptAlert: 'block' });
             }
-            else if (userInfo.roleName == "Store Staff"){
-                url = '/staffHome';
+            else{
+                user.authorization = res.data.data[0];
+                user.email = res.data.data[1]["email"];
+                user.userUrl = res.data.data[1]["userUrl"];
+                if (userInfo.roleName == "Customer"){
+                    url = '/home';
+                }
+                else if (userInfo.roleName == "Store Staff"){
+                    url = '/staffHome';
+                }
+                this.setState({ redirect: true, url: url });
             }
-            this.setState({ redirect: true, url: url });
+
         })
 
+    }
+
+    dismissAlert(){
+        this.setState({ promptAlert: 'none' });
     }
 
 
     render(){
         let redirect = this.state.redirect;
         if (redirect) {
-            return <Redirect to={this.state.url}/>;
+            return <Redirect to={{ pathname: this.state.url, state: { authorization: user.authorization} }}/>;
         }
 
         return (
             <div>
+                <Alert variant="danger" onClick={this.dismissAlert.bind(this)} style={{display: this.state.promptAlert}}>
+                    Login failed: Username or password incorrect😒
+                </Alert>
                 <Form id="login">
                     <Form.Group controlId="formBasicUsername" id="roleSelect">
                         <Form.Control as="select" ref={this.roleName}>

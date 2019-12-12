@@ -21,11 +21,15 @@ class ShoppingCart extends Component{
             checkItemsMap:{},
             redirect: false,
             placedProducts: [],
-            placedOrderIds: []
+            placedOrderIds: [],
+            hasError: false
         };
     };
 
     componentWillMount(){
+        if (user.authorization.length == 0){
+            this.setState({ redirect: true, hasError: true });
+        }
         const res = axios.get("http://localhost:8080/koowakchai/store/getCartItem",
             {
                 headers: {
@@ -47,6 +51,32 @@ class ShoppingCart extends Component{
                 checkItemsMap: tempMap
             })
             // console.log(this.state.checkItemsMap);
+        }).catch(error => {
+            let errStr = "";
+            // Error
+            if (error.response) {
+                // The request was made and the server responded with a status code
+                // that falls out of the range of 2xx
+                // console.log(error.response.data);
+                // console.log(error.response.status);
+                // console.log(error.response.headers);
+                errStr = "response data: " + error.response.data + "; response status: " + error.response.status + "; response headers: " + error.response.headers;
+
+
+            } else if (error.request) {
+                // The request was made but no response was received
+                // `error.request` is an instance of XMLHttpRequest in the
+                // browser and an instance of
+                // http.ClientRequest in node.js
+                console.log(error.request);
+                errStr = "error request: " + error.request;
+            } else {
+                // Something happened in setting up the request that triggered an Error
+                console.log('Error', error.message);
+                errStr = "error message: " + error.message;
+            }
+            console.log(error.config);
+            return <Redirect to={{ pathname: '/errorPage', state: { authorization: user.authorization, yourError: errStr} }}/>
         })
     }
 
@@ -98,6 +128,32 @@ class ShoppingCart extends Component{
             console.log("tried place order: " + res.data);
             this.setState({ redirect: true, placedOrderIds: res.data.data });
 
+        }).catch(error => {
+            let errStr = "";
+            // Error
+            if (error.response) {
+                // The request was made and the server responded with a status code
+                // that falls out of the range of 2xx
+                // console.log(error.response.data);
+                // console.log(error.response.status);
+                // console.log(error.response.headers);
+                errStr = "response data: " + error.response.data + "; response status: " + error.response.status + "; response headers: " + error.response.headers;
+
+
+            } else if (error.request) {
+                // The request was made but no response was received
+                // `error.request` is an instance of XMLHttpRequest in the
+                // browser and an instance of
+                // http.ClientRequest in node.js
+                console.log(error.request);
+                errStr = "error request: " + error.request;
+            } else {
+                // Something happened in setting up the request that triggered an Error
+                console.log('Error', error.message);
+                errStr = "error message: " + error.message;
+            }
+            console.log(error.config);
+            return <Redirect to={{ pathname: '/errorPage', state: { authorization: user.authorization, yourError: errStr} }}/>
         })
     }
 
@@ -119,11 +175,20 @@ class ShoppingCart extends Component{
     }
 
     render(){
-        const { redirect } = this.state;
-
+        const redirect  = this.state.redirect;
+        const hasError = this.state.hasError;
         if (redirect) {
-            historyUrl.push("/shoppingCart");
-            return <Redirect to={{ pathname: '/placeOrder', state: { authorization: user.authorization, placedOrderIds: this.state.placedOrderIds} }}/>;
+            if (hasError) {
+                return <Redirect to={{
+                    pathname: '/errorPage',
+                    state: {authorization: user.authorization, yourError: "authentication"}
+                }}/>
+            }
+            else{
+                historyUrl.push("/shoppingCart");
+                return <Redirect to={{ pathname: '/placeOrder', state: { authorization: user.authorization, placedOrderIds: this.state.placedOrderIds} }}/>;
+            }
+
         }
         return(
             <div>

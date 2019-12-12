@@ -19,13 +19,17 @@ class StaffHome extends Component{
         this.state = {
             storeProductTypes: [],
             redirect: false,
-            url: ''
+            url: '',
+            hasError: false
         };
         this.phoneNumber = React.createRef();
         this.profileUrl = React.createRef();
     }
 
     componentWillMount(){
+        if (user.authorization.length == 0){
+            this.setState({ redirect: true, hasError: true });
+        }
         const res = axios.get("http://localhost:8080/koowakchai/store/getProductTypes",
             {
                 headers: {
@@ -40,6 +44,32 @@ class StaffHome extends Component{
                 storeProductTypes: res.data.data
             });
             console.log(this.state.storeProductTypes);
+        }).catch(error => {
+            let errStr = "";
+            // Error
+            if (error.response) {
+                // The request was made and the server responded with a status code
+                // that falls out of the range of 2xx
+                // console.log(error.response.data);
+                // console.log(error.response.status);
+                // console.log(error.response.headers);
+                errStr = "response data: " + error.response.data + "; response status: " + error.response.status + "; response headers: " + error.response.headers;
+
+
+            } else if (error.request) {
+                // The request was made but no response was received
+                // `error.request` is an instance of XMLHttpRequest in the
+                // browser and an instance of
+                // http.ClientRequest in node.js
+                console.log(error.request);
+                errStr = "error request: " + error.request;
+            } else {
+                // Something happened in setting up the request that triggered an Error
+                console.log('Error', error.message);
+                errStr = "error message: " + error.message;
+            }
+            console.log(error.config);
+            return <Redirect to={{ pathname: '/errorPage', state: { authorization: user.authorization, yourError: errStr} }}/>
         })
     }
 
@@ -85,10 +115,19 @@ class StaffHome extends Component{
 
     render(){
         let redirect = this.state.redirect;
+        const hasError = this.state.hasError;
         let url = this.state.url;
         if (redirect){
-            historyUrl.push('/staffHome');
-            return <Redirect to={this.state.url}/>;
+            if (hasError) {
+                return <Redirect to={{
+                    pathname: '/errorPage',
+                    state: {authorization: user.authorization, yourError: "authentication"}
+                }}/>
+            }
+            else{
+                historyUrl.push('/staffHome');
+                return <Redirect to={this.state.url}/>;
+            }
 
         }
         return(

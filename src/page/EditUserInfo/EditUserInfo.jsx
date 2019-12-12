@@ -15,6 +15,7 @@ import Accordion from "react-bootstrap/Accordion";
 import Card from "react-bootstrap/Card";
 import { ToastContainer, toast } from 'react-toastify';
 import Wallet from "../../Component/Wallet/Wallet";
+import { Redirect } from 'react-router-dom';
 
 class EditUserInfo extends Component{
     constructor(props){
@@ -25,6 +26,8 @@ class EditUserInfo extends Component{
             selectedFile: null,
             showNewPayment: 'none',
             showWallet: 'block',
+            redirect: false,
+            hasError: false
         };
 
     }
@@ -33,6 +36,11 @@ class EditUserInfo extends Component{
         toast.info("Your account info has been updated 😬");
     };
 
+    componentWillMount(){
+        if (user.authorization.length == 0){
+            this.setState({ redirect: true, hasError: true });
+        }
+    }
 
 
     doUpdateUser(){
@@ -60,21 +68,36 @@ class EditUserInfo extends Component{
             user.email = this.email.current.value;
             user.phoneNum = this.phoneNumber.current.value;
             this.notify();
+        }).catch(error => {
+            let errStr = "";
+            // Error
+            if (error.response) {
+                // The request was made and the server responded with a status code
+                // that falls out of the range of 2xx
+                // console.log(error.response.data);
+                // console.log(error.response.status);
+                // console.log(error.response.headers);
+                errStr = "response data: " + error.response.data + "; response status: " + error.response.status + "; response headers: " + error.response.headers;
+
+
+            } else if (error.request) {
+                // The request was made but no response was received
+                // `error.request` is an instance of XMLHttpRequest in the
+                // browser and an instance of
+                // http.ClientRequest in node.js
+                console.log(error.request);
+                errStr = "error request: " + error.request;
+            } else {
+                // Something happened in setting up the request that triggered an Error
+                console.log('Error', error.message);
+                errStr = "error message: " + error.message;
+            }
+            console.log(error.config);
+            return <Redirect to={{ pathname: '/errorPage', state: { authorization: user.authorization, yourError: errStr} }}/>
         })
     }
 
     fileChangedHandler(event){
-        // let file = event.target.files[0];
-        // var x = document.getElementById("myFile");
-        // var txt = "";
-        // if ('files' in x) {
-        //     for (var i = 0; i < x.files.length; i++) {
-        //         var myFile = x.files[i];
-        //         if ('name' in myFile) {
-        //             txt += myFile.name;
-        //         }
-        //     }
-        // }
         let file = event.target.files[0];
         this.setState({ selectedFile: file })
 
@@ -95,6 +118,16 @@ class EditUserInfo extends Component{
 
 
     render(){
+        const redirect = this.state.redirect;
+        const hasError = this.state.hasError;
+        if (redirect) {
+            if (hasError) {
+                return <Redirect to={{
+                    pathname: '/errorPage',
+                    state: {authorization: user.authorization, yourError: "authentication"}
+                }}/>
+            }
+        }
         return(
             <div >
                 <Header authorization={user.authorization} backBtn="visible" userBtn="hidden" currentPath="/editUserInfo"/>

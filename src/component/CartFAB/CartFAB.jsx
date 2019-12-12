@@ -29,7 +29,6 @@ class CartFAB extends Component{
 
 
     componentWillMount(){
-
         const res = axios.get("http://localhost:8080/koowakchai/store/getCartItem",
             {
                 headers: {

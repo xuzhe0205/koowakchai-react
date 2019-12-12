@@ -14,6 +14,8 @@ import placedProductsCache from "../../Model/placedProducts";
 import Form from "react-bootstrap/Form";
 import Wallet from "../../Component/Wallet/Wallet";
 import Container from "react-bootstrap/Container";
+import { Redirect } from 'react-router-dom';
+
 
 class PlaceOrder extends Component{
     constructor(props){
@@ -22,13 +24,23 @@ class PlaceOrder extends Component{
             placedProducts: placedProductsCache,
             addrId: 0,
             addrBorder: '',
-            paymentBorder: ''
+            paymentBorder: '',
+            redirect: false,
+            hasError: false
         };
         console.log(this.state.placedProducts)
         this.recipName = React.createRef();
         this.recipPhone = React.createRef();
         this.recipAddress = React.createRef();
     };
+
+
+    componentWillMount(){
+        if (user.authorization.length == 0){
+            this.setState({ redirect: true, hasError: true });
+        }
+    }
+
 
     createPlacedProductsCards(){
         let cards = [];
@@ -64,6 +76,32 @@ class PlaceOrder extends Component{
         ).then(res => {
             alert("Order completed!")
             this.notify();
+        }).catch(error => {
+            let errStr = "";
+            // Error
+            if (error.response) {
+                // The request was made and the server responded with a status code
+                // that falls out of the range of 2xx
+                // console.log(error.response.data);
+                // console.log(error.response.status);
+                // console.log(error.response.headers);
+                errStr = "response data: " + error.response.data + "; response status: " + error.response.status + "; response headers: " + error.response.headers;
+
+
+            } else if (error.request) {
+                // The request was made but no response was received
+                // `error.request` is an instance of XMLHttpRequest in the
+                // browser and an instance of
+                // http.ClientRequest in node.js
+                console.log(error.request);
+                errStr = "error request: " + error.request;
+            } else {
+                // Something happened in setting up the request that triggered an Error
+                console.log('Error', error.message);
+                errStr = "error message: " + error.message;
+            }
+            console.log(error.config);
+            return <Redirect to={{ pathname: '/errorPage', state: { authorization: user.authorization, yourError: errStr} }}/>
         })
     }
 
@@ -83,10 +121,46 @@ class PlaceOrder extends Component{
         ).then(res => {
             this.setState({ addrId: res.data.data, addrBorder: '3px solid green' });
             console.log("your address Id: " + this.state.addrId);
+        }).catch(error => {
+            let errStr = "";
+            // Error
+            if (error.response) {
+                // The request was made and the server responded with a status code
+                // that falls out of the range of 2xx
+                // console.log(error.response.data);
+                // console.log(error.response.status);
+                // console.log(error.response.headers);
+                errStr = "response data: " + error.response.data + "; response status: " + error.response.status + "; response headers: " + error.response.headers;
+
+
+            } else if (error.request) {
+                // The request was made but no response was received
+                // `error.request` is an instance of XMLHttpRequest in the
+                // browser and an instance of
+                // http.ClientRequest in node.js
+                console.log(error.request);
+                errStr = "error request: " + error.request;
+            } else {
+                // Something happened in setting up the request that triggered an Error
+                console.log('Error', error.message);
+                errStr = "error message: " + error.message;
+            }
+            console.log(error.config);
+            return <Redirect to={{ pathname: '/errorPage', state: { authorization: user.authorization, yourError: errStr} }}/>
         })
     }
 
     render(){
+        const redirect = this.state.redirect;
+        const hasError = this.state.hasError;
+        if (redirect) {
+            if (hasError) {
+                return <Redirect to={{
+                    pathname: '/errorPage',
+                    state: {authorization: user.authorization, yourError: "authentication"}
+                }}/>
+            }
+        }
         return(
             <div>
                 <Header authorization={user.authorization} backBtn="visible" userBtn="visible" currentPath="/placeOrder"/>
@@ -119,7 +193,7 @@ class PlaceOrder extends Component{
 
                 </div>
                 <br/>
-                <Button variant="dark" size="lg" onClick={this.makePayment.bind(this)}>Make payment</Button>
+                <Button variant="dark" size="lg" onClick={this.makePayment.bind(this)} style={{marginBottom: '1rem'}}>Make payment</Button>
                 <br/>
             </div>
 
